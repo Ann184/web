@@ -138,5 +138,78 @@
   };
 </script>
 
+<div class="info-container compact-form">
+  <h2 class="section-title">Обратная связь</h2>
+  <form id="compact-feedback-form">
+    <div class="form-group">
+      <input type="text" id="compact-name" name="name" placeholder="Ваше имя" required>
+      <span class="error-message" id="compact-name-error"></span>
+    </div>
+    
+    <div class="form-group">
+      <input type="email" id="compact-email" name="email" placeholder="Ваш email" required>
+      <span class="error-message" id="compact-email-error"></span>
+    </div>
+    
+    <div class="form-group">
+      <textarea id="compact-message" name="message" rows="3" placeholder="Ваше сообщение" required></textarea>
+      <span class="error-message" id="compact-message-error"></span>
+    </div>
+    
+    <button type="submit" class="submit-btn">Отправить</button>
+  </form>
+</div>
+
+<script>
+  document.getElementById('compact-feedback-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var name = document.getElementById('compact-name').value.trim();
+    var email = document.getElementById('compact-email').value.trim();
+    var message = document.getElementById('compact-message').value.trim();
+
+    clearErrors();
+    
+    var isValid = true;
+
+    if (name.length < 2) {
+      showError('compact-name-error', 'Слишком короткое имя');
+      isValid = false;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('compact-email-error', 'Некорректный email');
+      isValid = false;
+    }
+
+    if (message.length < 10) {
+      showError('compact-message-error', 'Сообщение слишком короткое');
+      isValid = false;
+    }
+    
+    if (isValid) {
+      alert('Спасибо! Ваше сообщение отправлено.');
+      this.reset();
+    }
+  });
+  
+  function showError(elementId, message) {
+    var errorElement = document.getElementById(elementId);
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+    errorElement.previousElementSibling.classList.add('error-field');
+  }
+  
+  function clearErrors() {
+    document.querySelectorAll('.error-message').forEach(function(error) {
+      error.textContent = '';
+      error.style.display = 'none';
+    });
+    document.querySelectorAll('.error-field').forEach(function(field) {
+      field.classList.remove('error-field');
+    });
+  }
+</script>
+
 </body>
 </html>
