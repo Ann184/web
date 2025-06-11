@@ -47,5 +47,96 @@
     </div>
   </div>
 
+   <div id="kevin-carousel"></div>
+
+  <script>
+  var photos = [
+    'kevin1.jpg',
+    'kevin2.jpg',
+    'kevin3.jpg',
+    'kevin4.jpg'
+  ];
+
+  function makeCarousel(images, containerId) {
+
+    var container = document.getElementById(containerId);
+    if (!container) return;
+
+    var carouselHTML = `
+      <div class="carousel">
+        <div class="carousel-images">
+          ${images.map(function(img, i) {
+            return `<div class="carousel-img" style="background-image: url('${img}')"></div>`;
+          }).join('')}
+        </div>
+        <button class="carousel-prev">←</button>
+        <button class="carousel-next">→</button>
+        <div class="carousel-dots"></div>
+      </div>
+    `;
+
+    container.innerHTML = carouselHTML;
+
+    var imagesContainer = container.querySelector('.carousel-images');
+    var images = container.querySelectorAll('.carousel-img');
+    var prevBtn = container.querySelector('.carousel-prev');
+    var nextBtn = container.querySelector('.carousel-next');
+    var dotsContainer = container.querySelector('.carousel-dots');
+
+    images.forEach(function(img, i) {
+      var dot = document.createElement('span');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.onclick = function() { showImage(i); };
+      dotsContainer.appendChild(dot);
+    });
+    
+    var dots = dotsContainer.querySelectorAll('.dot');
+    var current = 0;
+    var timer;
+
+    function showImage(index) {
+      if (index < 0) index = images.length - 1;
+      if (index >= images.length) index = 0;
+
+      current = index;
+      imagesContainer.style.transform = 'translateX(-' + (current * 100) + '%)';
+
+      dots.forEach(function(dot, i) {
+        dot.classList.toggle('active', i === current);
+      });
+
+      resetTimer();
+    }
+
+    function nextImage() {
+      showImage(current + 1);
+    }
+
+    function prevImage() {
+      showImage(current - 1);
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timer = setInterval(nextImage, 3000);
+    }
+
+    prevBtn.onclick = prevImage;
+    nextBtn.onclick = nextImage;
+
+    container.querySelector('.simple-carousel').onmouseenter = function() {
+      clearInterval(timer);
+    };
+    
+    container.querySelector('.simple-carousel').onmouseleave = resetTimer;
+
+    resetTimer();
+  }
+
+  window.onload = function() {
+    makeCarousel(photos, 'kevin-carousel');
+  };
+</script>
+
 </body>
 </html>
